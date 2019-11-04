@@ -1,0 +1,76 @@
+// WallCalendar.hcs  Write a given month, year as wall calendar in html
+
+let year = 2019;
+let month = 12;
+
+let mstart = date {"g",year,month,1};
+let start = mstart - mstart[wday] + 1;
+
+writeln "<!DOCTYPE html>";
+writeln "<!-- Written by HistoryCal script WallCalendar.hcs " + string today + " -->";
+writeln "<html lang='en'>";
+writeln "<head>";
+writeln "<meta charset='utf-8'>";
+writeln "<title>Calendar</title>";
+
+writeln "<style>";
+writeln "table {";
+writeln " table-layout: fixed; width: 98%;";
+writeln " margin-left: 1%;";
+writeln " border-collapse: collapse;";
+writeln "}";
+
+writeln "th {border: 1px solid black; background-color: #fff5cc;}";
+writeln "th.top {font-size: 200%;}";
+
+writeln "td {";
+writeln " width: 14%; height: 5em;";
+writeln " border: 1px solid black;";
+writeln " padding: 0 0.3em;";
+writeln " vertical-align: top;";
+writeln " font-size: 120%; font-weight: bold;";
+writeln "}";
+
+writeln "td.light {color: darkgrey; background-color: snow;}";
+writeln "</style>";
+
+writeln "</head>";
+writeln "<body>";
+
+writeln "<p>Created with <a href='http://historycal.org'>HistoryCal</a> Script</p>";
+
+writeln "<table>";
+writeln "<tr><th colspan='7' class='top'>" + convert,m month + " " + year + "</th></tr>";
+
+writeln "<tr>";
+let i = 1;
+do while i < 8
+    writeln "<th>" + convert,w:a i + "</th>";
+    i += 1;
+loop
+writeln "</tr>";
+
+let i = 0;
+let class = "light";
+do while i < 6;
+    writeln "<tr>";
+    let j = 0;
+    do while j < 7;
+        let d = (start+i*7+j)[day];
+        if d = 1 and class = "light"
+            class = "bold";
+        elseif d = 1 and class = "bold"
+            class = "light";
+        endif
+        writeln "<td class='" + class + "'>" + d + "</td>";
+        j += 1;    
+    loop
+    writeln "</tr>";
+    i += 1;
+loop
+writeln "</table>";
+
+writeln "</body>";
+writeln "</html>";
+
+end;
