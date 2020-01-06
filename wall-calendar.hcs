@@ -1,7 +1,7 @@
 // WallCalendar.hcs  Write a given month, year as wall calendar in html
 
-let year = 2019;
-let month = 12;
+let year = 2020;
+let month = 1;
 
 let mstart = date {"g",year,month,1};
 let start = mstart - mstart[wday] + 1;
@@ -50,19 +50,30 @@ do while i < 8
 loop
 writeln "</tr>";
 
+let jdn = start;
 let i = 0;
 let class = "light";
-do while i < 6;
+do while i < 6
     writeln "<tr>";
     let j = 0;
-    do while j < 7;
-        let d = (start+i*7+j)[day];
+    do while j < 7
+        let d = jdn[day];
         if d = 1 and class = "light"
             class = "bold";
         elseif d = 1 and class = "bold"
             class = "light";
         endif
-        writeln "<td class='" + class + "'>" + d + "</td>";
+        write "<td class='" + class + "'>" + d;
+        if j = 2 and class = "bold"
+            let wn = jdn / 7;
+            if wn mod 2 = 0
+                write " 🟦";
+            else
+                write " ⬛";
+            endif
+        endif
+        writeln "</td>";
+        jdn += 1;
         j += 1;    
     loop
     writeln "</tr>";
