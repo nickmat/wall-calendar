@@ -58,10 +58,9 @@ do while i < 6
     let j = 0;
     do while j < 7
         let d = jdn[day];
-        if d = 1 and class = "light"
-            class = "bold";
-        elseif d = 1 and class = "bold"
-            class = "light";
+        if d = 1
+            // Swap class between light and bold.
+            class = @if( class = "bold", "light", "bold" );
         endif
         write "<td class='" + class + "'>" + d;
         if j = 2 and class = "bold"
