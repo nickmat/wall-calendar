@@ -5,6 +5,8 @@ let month = 1;
 
 let mstart = date {"g",year,month,1};
 let start = mstart - mstart[wday] + 1;
+let mname = convert,m month;
+let image = convert,:lp:03 month;
 
 writeln "<!DOCTYPE html>";
 writeln "<!-- Written by HistoryCal script WallCalendar.hcs " + string today + " -->";
@@ -14,6 +16,7 @@ writeln "<meta charset='utf-8'>";
 writeln "<title>Calendar</title>";
 
 writeln "<style>";
+writeln "img {margin-left: 1%; margin-bottom: 1em;}";
 writeln "table {";
 writeln " table-layout: fixed; width: 98%;";
 writeln " margin-left: 1%;";
@@ -32,12 +35,15 @@ writeln " font-size: 120%; font-weight: bold;";
 writeln "}";
 
 writeln "td.light {color: darkgrey; background-color: snow;}";
+
+writeln ".small { font-size: small;}";
 writeln "</style>";
 
 writeln "</head>";
 writeln "<body>";
 
-writeln "<p>Created with <a href='http://historycal.org'>HistoryCal</a> Script</p>";
+writeln "<img src='image/" + image + ".jpg' alt='Image for " + mname + "' width='98%'>";
+
 
 writeln "<table>";
 writeln "<tr><th colspan='7' class='top'>" + convert,m month + " " + year + "</th></tr>";
@@ -79,6 +85,8 @@ do while i < 6
     i += 1;
 loop
 writeln "</table>";
+
+writeln "<p class='small'>Created with <a href='http://historycal.org'>HistoryCal</a> Script</p>";
 
 writeln "</body>";
 writeln "</html>";
