@@ -1,12 +1,14 @@
 // WallCalendar.hcs  Write a given month, year as wall calendar in html
 
 let year = 2020;
-let month = 1;
+let month = 2;
 
 let mstart = date {"g",year,month,1};
 let start = mstart - mstart[wday] + 1;
 let mname = convert,m month;
 let image = convert,:lp:03 month;
+let nmoon = start[newmoon];
+let nmoon2 = (nmoon + 27)[newmoon];
 
 writeln "<!DOCTYPE html>";
 writeln "<!-- Written by HistoryCal script WallCalendar.hcs " + string today + " -->";
@@ -44,7 +46,6 @@ writeln "<body>";
 
 writeln "<img src='image/" + image + ".jpg' alt='Image for " + mname + "' width='98%'>";
 
-
 writeln "<table>";
 writeln "<tr><th colspan='7' class='top'>" + convert,m month + " " + year + "</th></tr>";
 
@@ -69,13 +70,20 @@ do while i < 6
             class = @if( class = "bold", "light", "bold" );
         endif
         write "<td class='" + class + "'>" + d;
+        let note = "";
         if j = 2 and class = "bold"
             let wn = jdn / 7;
             if wn mod 2 = 0
-                write " 🟦";
+                note += " ♻️";
             else
-                write " ⬛";
+                note += " ⬛";
             endif
+        endif
+        if jdn = nmoon or jdn = nmoon2
+            note += " 🌑";
+        endif
+        if note[.size] > 0
+            write "<scan class='small'>" + note + "</scan>";
         endif
         writeln "</td>";
         jdn += 1;
