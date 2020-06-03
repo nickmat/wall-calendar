@@ -23,6 +23,6 @@ This is how this script is intended to run, with std out piped to a html text fi
 
 On windows, the code is run as follows.
 
-`hcs -e wall-calendar.hcs > cal.htm`
+`hcs -e wall-calendar.hcs`
 
-And should result in the output file [cal.htm](https://nickmat.github.io/wall-calendar/cal.htm).
+And should result in 12 output files, such as [cal/cal-2020-6.htm](https://nickmat.github.io/wall-calendar/cal/cal-2020-6.htm).

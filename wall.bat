@@ -1,1 +1,3 @@
-hcs -e wall-calendar.hcs > cal.htm
+hcs -e wall-calendar.hcs
+
+pause

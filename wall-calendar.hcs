@@ -1,4 +1,4 @@
-// WallCalendar.hcs  Write a given month, year as wall calendar in html
+// wall-calendar.hcs  Write a given month, year as wall calendar in html
 
 function html_month( year, month ) {
 
@@ -94,6 +94,17 @@ result += "</table>
 </html>";
 }
 
-writeln  @html_month( 2020, 5 );
+function make_month_file( year, month ) {
+    file out "cal/cal-" + year + "-" + month + ".htm";
+    writeln.out  @html_month( year, month );
+}
+
+let y = 2020;
+let m = 1;
+do
+    call make_month_file( y, m );
+    m += 1;
+    until m > 12
+loop
 
 end;
