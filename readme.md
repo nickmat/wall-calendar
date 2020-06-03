@@ -19,10 +19,12 @@ The program is named **hcs** and is intended to be added to the path
 so it can be run from anywhere.
 Using the -e flag the program can be used to run a hcs script file
 with the output going to std out.
-This is how this script is intended to run, with std out piped to a html text file.
+Using the new **file** statement output can also be directed to separate files,
+which is how this program now operates.
 
-On windows, the code is run as follows.
+The `cal/images` must have been already been set-up
+and the code is run as follows.
 
 `hcs -e wall-calendar.hcs`
 
-And should result in 12 output files, such as [cal/cal-2020-6.htm](https://nickmat.github.io/wall-calendar/cal/cal-2020-6.htm).
+This should result in 12 output files, such as [cal/cal-2020-6.htm](https://nickmat.github.io/wall-calendar/cal/cal-2020-6.htm). The pages are designed to be printed on A3 paper. Some adjustment would be required for other page sizes.
