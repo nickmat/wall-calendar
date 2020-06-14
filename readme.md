@@ -27,4 +27,4 @@ and the code is run as follows.
 
 `hcs -e wall-calendar.hcs`
 
-This should result in 12 output files, such as [cal/cal-2020-6.htm](https://nickmat.github.io/wall-calendar/cal/cal-2020-6.htm). The pages are designed to be printed on A3 paper. Some adjustment would be required for other page sizes.
+This should result in 12 output files and a full year page [cal/cal-2020.htm](https://nickmat.github.io/wall-calendar/cal/cal-2020.htm). The pages are designed to be printed on A3 paper. Some adjustment would be required for other page sizes.
