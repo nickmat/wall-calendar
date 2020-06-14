@@ -1,5 +1,113 @@
 // wall-calendar.hcs  Write a given month, year as wall calendar in html
 
+// write a full years calendar on a single page
+function month_cell( year, month ) {
+    let nl = "
+";
+    result = "<table class='month'>
+ <tr><th class='month' colspan='7'><a href='cal-"+year+"-"+month+".htm'>"+convert.m month+"</a></th></tr>
+";
+    let row = 0;
+    result += "<tr>";
+    do until row = 7;
+        row += 1;
+        result += "<th>" + convert.w:a row + "</th>";
+    loop
+    result += "</tr>";
+
+    let mstart = date {"g",year,month,1};
+    let start = mstart - mstart[wday] + 1;
+
+    let jdn = start;
+    let i = 0;
+    let class = "light";
+    do while i < 6
+        result += "<tr>" + nl;
+        let j = 0;
+        do while j < 7
+            let d = jdn[day];
+            if d = 1
+                // Swap class between light and none.
+                class = @if( class = "", "light", "" );
+            endif
+            result += "<td" + @if(class = "light", " class='light'", "") + ">" + d;
+            let note = "";
+            if j = 2 and class = ""
+                let wn = jdn / 7;
+            endif
+            result += "</td>" + nl;
+            jdn += 1;
+            j += 1;    
+        loop
+        result += "</tr>" + nl;
+        i += 1;
+    loop
+
+
+    result += "</table>
+"; 
+}
+
+function html_year( year ) {
+
+    result = "<!DOCTYPE html>
+<!-- Written by HistoryCal script WallCalendar.hcs " + string today + " -->
+<html lang='en'>
+<head>
+<meta charset='utf-8'>
+<title>Calendar</title>
+<style>
+table.layout {
+ table-layout: fixed;
+ width: 98%;
+ border-collapse: collapse;
+ margin: auto;
+}
+th.top {
+ font-size: 200%;
+}
+table.layout td {
+ width: 32%;
+ vertical-align: top;
+ text-align: center;
+}
+table.month {
+ width: 98%;
+ border: 1px solid black;
+ border-collapse: collapse;
+ margin: 0.25em auto;
+}
+table.month th.month {
+  font-weight: bold;
+  font-size: 125%;
+}
+table.month th {
+ border: none;
+ background-color: #fff5cc;
+ font-weight: normal;
+}
+table.month td {
+ width: 14%;
+ border: none;
+}
+td.light {color: darkgrey; background-color: snow;}
+.small { font-size: small;}
+</style>
+</head>
+<body>
+<table class='layout'>
+<tr><th class='top' colspan='3'>" + year + " - "  + scheme..name + "</th></tr>
+<tr><td>"+@month_cell( year, 1 )+"</td><td>"+@month_cell( year, 2 )+"</td><td>"+@month_cell( year, 3 )+"</td></tr>
+<tr><td>"+@month_cell( year, 4 )+"</td><td class='month'>"+@month_cell( year, 5 )+"</td><td class='month'>"+@month_cell( year, 6 )+"</td></tr>
+<tr><td>"+@month_cell( year, 7 )+"</td><td class='month'>"+@month_cell( year, 8 )+"</td><td class='month'>"+@month_cell( year, 9 )+"</td></tr>
+<tr><td>"+@month_cell( year, 10 )+"</td><td class='month'>"+@month_cell( year, 11 )+"</td><td class='month'>"+@month_cell( year, 12 )+"</td></tr>
+</table>
+<p class='small'>Created with <a href='http://historycal.org'>HistoryCal</a> Script</p>
+</body>
+</html>";
+}
+
+
 function html_month( year, month ) {
 
 let mstart = date {"g",year,month,1};
@@ -100,6 +208,8 @@ function make_month_file( year, month ) {
 }
 
 let y = 2020;
+file out_year "cal/cal-" + y + ".htm";
+write.out_year @html_year( y );
 let m = 1;
 do
     call make_month_file( y, m );
