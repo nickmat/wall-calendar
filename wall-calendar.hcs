@@ -207,7 +207,7 @@ function make_month_file( year, month ) {
     writeln.out  @html_month( year, month );
 }
 
-let y = 2020;
+let y = convert @read("Enter year: ");
 file out_year "cal/cal-" + y + ".htm";
 write.out_year @html_year( y );
 let m = 1;
