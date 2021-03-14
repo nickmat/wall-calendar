@@ -108,7 +108,7 @@ td.light {color: darkgrey; background-color: snow;}
 }
 
 
-function html_month( year, month ) {
+function html_month( year, month, paper ) {
 
 let mstart = date {"g",year,month,1};
 let start = mstart - mstart[wday] + 1;
@@ -116,6 +116,11 @@ let mname = convert,m month;
 let image = convert,:lp:03 month;
 let nmoon = start[newmoon];
 let nmoon2 = (nmoon + 27)[newmoon];
+if paper = "a3" or paper = "A3"
+    let cell_ht = "9";
+else
+    let cell_ht = "6";
+endif
 
 let nl = "
 ";
@@ -138,7 +143,7 @@ th {border: 1px solid black; background-color: #fff5cc;}
 th.top {font-size: 200%;}
 td {
  width: 14%;
- height: 6em;
+ height: " + cell_ht + "em;
  border: 1px solid black;
  padding: 0 0.3em;
  vertical-align: top;
@@ -202,17 +207,18 @@ result += "</table>
 </html>";
 }
 
-function make_month_file( year, month ) {
+function make_month_file( year, month, paper ) {
     file out "cal/cal-" + year + "-" + month + ".htm";
-    writeln.out  @html_month( year, month );
+    writeln.out  @html_month( year, month, paper );
 }
 
 let y = convert @read("Enter year: ");
+let p = @read( "Enter paper size (a4,a3): " );
 file out_year "cal/cal-" + y + ".htm";
 write.out_year @html_year( y );
 let m = 1;
 do
-    call make_month_file( y, m );
+    call make_month_file( y, m, p );
     m += 1;
     until m > 12
 loop
