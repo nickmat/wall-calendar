@@ -1,22 +1,24 @@
-// wall-calendar.hcs  Write a given month, year as wall calendar in html
+// wall-calendar.glcs  Write a given month, year as wall calendar in html
+
+mark test;
 
 // write a full years calendar on a single page
 function month_cell( year, month ) {
-    let nl = "
-";
-    result = "<table class='month'>
- <tr><th class='month' colspan='7'><a href='cal-"+year+"-"+month+".htm'>"+convert.m month+"</a></th></tr>
-";
+
+    result = "<table class='month'>" + nl +
+        "<tr><th class='month' colspan='7'><a href='cal-"+year+"-"+month+".htm'>"
+        +@element.m( month )+"</a></th></tr>" + nl;
+
     let row = 0;
     result += "<tr>";
     do until row = 7;
         row += 1;
-        result += "<th>" + convert.w:a row + "</th>";
+        result += "<th>" + @element.w:a( row ) + "</th>";
     loop
     result += "</tr>";
 
-    let mstart = date {"g",year,month,1};
-    let start = mstart - mstart[wday] + 1;
+    let mstart = @date( {s:g year, month, 1} );
+    let start = mstart - @record.g( mstart )[wday] + 1;
 
     let jdn = start;
     let i = 0;
@@ -25,7 +27,7 @@ function month_cell( year, month ) {
         result += "<tr>" + nl;
         let j = 0;
         do while j < 7
-            let d = jdn[day];
+            let d = @record.g(jdn)[day];
             if d = 1
                 // Swap class between light and none.
                 class = @if( class = "", "light", "" );
@@ -43,15 +45,13 @@ function month_cell( year, month ) {
         i += 1;
     loop
 
-
-    result += "</table>
-"; 
+    result += "</table>" + nl;
 }
 
 function html_year( year ) {
 
     result = "<!DOCTYPE html>
-<!-- Written by HistoryCal script WallCalendar.hcs " + string today + " -->
+<!-- Written by HistoryCal script WallCalendar.hcs " + @text( today ) + " -->
 <html lang='en'>
 <head>
 <meta charset='utf-8'>
@@ -96,13 +96,13 @@ td.light {color: darkgrey; background-color: snow;}
 </head>
 <body>
 <table class='layout'>
-<tr><th class='top' colspan='3'>" + year + " - "  + scheme..name + "</th></tr>
+<tr><th class='top' colspan='3'>" + year + "</th></tr>
 <tr><td>"+@month_cell( year, 1 )+"</td><td>"+@month_cell( year, 2 )+"</td><td>"+@month_cell( year, 3 )+"</td></tr>
 <tr><td>"+@month_cell( year, 4 )+"</td><td class='month'>"+@month_cell( year, 5 )+"</td><td class='month'>"+@month_cell( year, 6 )+"</td></tr>
 <tr><td>"+@month_cell( year, 7 )+"</td><td class='month'>"+@month_cell( year, 8 )+"</td><td class='month'>"+@month_cell( year, 9 )+"</td></tr>
 <tr><td>"+@month_cell( year, 10 )+"</td><td class='month'>"+@month_cell( year, 11 )+"</td><td class='month'>"+@month_cell( year, 12 )+"</td></tr>
 </table>
-<p class='small'>Created with <a href='http://historycal.org'>HistoryCal</a> Script</p>
+<p class='small'>Created with <a href='https://github.com/nickmat/glich'>Glich</a> Script</p>
 </body>
 </html>";
 }
@@ -110,23 +110,21 @@ td.light {color: darkgrey; background-color: snow;}
 
 function html_month( year, month, paper ) {
 
-let mstart = date {"g",year,month,1};
-let start = mstart - mstart[wday] + 1;
-let mname = convert,m month;
-let image = convert,:lp:03 month;
-let nmoon = start[newmoon];
-let nmoon2 = (nmoon + 27)[newmoon];
-if paper = "a3" or paper = "A3"
-    let cell_ht = "9";
-else
-    let cell_ht = "6";
-endif
+    let mstart = @date( {s:g year, month, 1} );
+    let start = mstart - @record.g( mstart )[wday] + 1;
 
-let nl = "
-";
+    let mname = @element.m( month );
+    let image = @element.:lp:03( month );
+//    let nmoon = start[newmoon];
+//    let nmoon2 = (nmoon + 27)[newmoon];/*
+    if paper = "a3" or paper = "A3"
+        let cell_ht = "9";
+    else
+        let cell_ht = "6";
+    endif
 
-result = "<!DOCTYPE html>
-<!-- Written by HistoryCal script WallCalendar.hcs " + string today + " -->
+    result = "<!DOCTYPE html>
+<!-- Written by HistoryCal script WallCalendar.hcs " + @text( today ) + " -->
 <html lang='en'>
 <head>
 <meta charset='utf-8'>
@@ -156,63 +154,67 @@ td.light {color: darkgrey; background-color: snow;}
 <body>
 <img src='image/" + image + ".jpg' alt='Image for " + mname + "' width='98%'>
 <table>
-<tr><th colspan='7' class='top'>" + convert,m month + " " + year + "</th></tr>
+<tr><th colspan='7' class='top'>" + @element.m( month ) + " " + year + "</th></tr>
 <tr>" + nl;
 
-let i = 1;
-do while i < 8
-    result += "<th>" + convert,w:a i + "</th>" + nl;
-    i += 1;
-loop
-result += "</tr>" + nl;
-
-let jdn = start;
-let i = 0;
-let class = "light";
-do while i < 6
-    result += "<tr>" + nl;
-    let j = 0;
-    do while j < 7
-        let d = jdn[day];
-        if d = 1
-            // Swap class between light and bold.
-            class = @if( class = "bold", "light", "bold" );
-        endif
-        result += "<td class='" + class + "'>" + d;
-        let note = "";
-        if j = 2 and class = "bold"
-            let wn = jdn / 7;
-            if wn mod 2 = 0
-                note += " ♻️";
-            else
-                note += " ⬛";
-            endif
-        endif
-        if jdn = nmoon or jdn = nmoon2
-            note += " 🌑";
-        endif
-        if note[.size] > 0
-            result += "<scan class='small'>" + note + "</scan>";
-        endif
-        result += "</td>" + nl;
-        jdn += 1;
-        j += 1;    
+    let i = 1;
+    do while i < 8
+        result += "<th>" + @element.w:a( i ) + "</th>";
+        i += 1;
     loop
-    result += "</tr>" + nl;
-    i += 1;
-loop
-result += "</table>
-<p class='small'>Created with <a href='http://historycal.org'>HistoryCal</a> Script</p>
-</body>
-</html>";
+    result += nl + "</tr>" + nl;
+    let jdn = start;
+    let i = 0;
+    let class = "light";
+    do while i < 6
+        result += "<tr>" + nl;
+        let j = 0;
+        do while j < 7
+            let d = @record(jdn)[day];
+            if d = 1
+                // Swap class between light and bold.
+                class = @if( class = "bold", "light", "bold" );
+            endif
+            result += "<td class='" + class + "'>" + d;
+            let note = "";
+/*
+            if j = 2 and class = "bold"
+                let wn = jdn div 7;
+                if (wn mod 2) = 0
+                    note += " R";
+                else
+                    note += " L";
+                endif
+            endif
+            if jdn = nmoon or jdn = nmoon2
+                note += " M";
+            endif
+*/
+            if note[.size] > 0
+                result += "<scan class='small'>" + note + "</scan>";
+            endif
+            result += "</td>" + nl;
+            jdn += 1;
+            j += 1;    
+        loop
+        result += "</tr>" + nl;
+        i += 1;
+    loop
 }
 
-function make_month_file( year, month, paper ) {
-    file out "cal/cal-" + year + "-" + month + ".htm";
-    writeln.out  @html_month( year, month, paper );
+file out;
+
+command make_month_file( year, month, paper ) {
+    file.out "cal/cal-" + year + "-" + month + ".htm" write;
+    write.out  @html_month( year, month, paper ) nl;
 }
 
-let y = convert @read("Enter year: ");
+
+//let y = 2024;
+//let m = 1;
+//let p = "a3";
+
+let y = @field( @read("Enter year: ") );
 let p = @read( "Enter paper size (a4,a3): " );
 file out_year "cal/cal-" + y + ".htm";
 write.out_year @html_year( y );
@@ -223,4 +225,5 @@ do
     until m > 12
 loop
 
+write "Done" nl;
 end;

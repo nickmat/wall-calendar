@@ -1,3 +1,3 @@
-hcs -e wall-calendar.hcs
+glcs -e wall-calendar.glcs
 
 pause
