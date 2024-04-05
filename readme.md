@@ -19,4 +19,4 @@ The [Gliched](https://nickmat.github.io/gliched/index.htm) IDE can be used to ed
 
 The `cal/images` pictures can be changed as required,
 
-Running this script should result in 12 output files and a full year page [cal/cal-2020.htm](https://nickmat.github.io/wall-calendar/cal/cal-2024.htm). The pages are designed to be printed on A4 or A3 paper. Some adjustment would be required for other page sizes.
+Running this script should result in 12 output files and a full year page [cal/cal-2024.htm](https://nickmat.github.io/wall-calendar/cal/cal-2024.htm). The pages are designed to be printed on A4 or A3 paper. Some adjustment would be required for other page sizes.
