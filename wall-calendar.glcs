@@ -115,8 +115,6 @@ function html_month( year, month, paper ) {
 
     let mname = @element.m( month );
     let image = @element.:lp:03( month );
-//    let nmoon = start[newmoon];
-//    let nmoon2 = (nmoon + 27)[newmoon];/*
     if paper = "a3" or paper = "A3"
         let cell_ht = "9";
     else
@@ -175,25 +173,7 @@ td.light {color: darkgrey; background-color: snow;}
                 // Swap class between light and bold.
                 class = @if( class = "bold", "light", "bold" );
             endif
-            result += "<td class='" + class + "'>" + d;
-            let note = "";
-/*
-            if j = 2 and class = "bold"
-                let wn = jdn div 7;
-                if (wn mod 2) = 0
-                    note += " R";
-                else
-                    note += " L";
-                endif
-            endif
-            if jdn = nmoon or jdn = nmoon2
-                note += " M";
-            endif
-*/
-            if note[.size] > 0
-                result += "<scan class='small'>" + note + "</scan>";
-            endif
-            result += "</td>" + nl;
+            result += "<td class='" + class + "'>" + d + "</td>" + nl;
             jdn += 1;
             j += 1;    
         loop
@@ -209,14 +189,11 @@ command make_month_file( year, month, paper ) {
     write.out  @html_month( year, month, paper ) nl;
 }
 
-
-//let y = 2024;
-//let m = 1;
-//let p = "a3";
+// Main Script
 
 let y = @field( @read("Enter year: ") );
 let p = @read( "Enter paper size (a4,a3): " );
-file out_year "cal/cal-" + y + ".htm";
+file out_year "cal/cal-" + y + ".htm" write;
 write.out_year @html_year( y );
 let m = 1;
 do
