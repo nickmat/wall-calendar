@@ -185,7 +185,7 @@ td.light {color: darkgrey; background-color: snow;}
 file out;
 
 command make_month_file( year, month, paper ) {
-    file.out "cal/cal-" + year + "-" + month + ".htm" write;
+    file.out write "cal/cal-" + year + "-" + month + ".htm";
     write.out  @html_month( year, month, paper ) nl;
 }
 
@@ -193,7 +193,7 @@ command make_month_file( year, month, paper ) {
 
 let y = @field( @read("Enter year: ") );
 let p = @read( "Enter paper size (a4,a3): " );
-file out_year "cal/cal-" + y + ".htm" write;
+file out_year write "cal/cal-" + y + ".htm";
 write.out_year @html_year( y );
 let m = 1;
 do
