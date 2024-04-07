@@ -51,7 +51,7 @@ function month_cell( year, month ) {
 function html_year( year ) {
 
     result = "<!DOCTYPE html>
-<!-- Written by HistoryCal script WallCalendar.hcs " + @text( today ) + " -->
+<!-- Written by Glich (version " + @version.number + ") script wall-calendar.glcs -->
 <html lang='en'>
 <head>
 <meta charset='utf-8'>
@@ -122,7 +122,7 @@ function html_month( year, month, paper ) {
     endif
 
     result = "<!DOCTYPE html>
-<!-- Written by HistoryCal script WallCalendar.hcs " + @text( today ) + " -->
+<!-- Written by Glich (version " + @version.number + ") script wall-calendar.glcs -->
 <html lang='en'>
 <head>
 <meta charset='utf-8'>
