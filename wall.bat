@@ -1,3 +1,3 @@
-glcs -e wall-calendar.glcs
+glich 2025 A3 wall-calendar.glcs
 
 pause

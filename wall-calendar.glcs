@@ -18,7 +18,7 @@ function month_cell( year, month ) {
     result += "</tr>";
 
     let mstart = @date( {s:g year, month, 1} );
-    let start = mstart - @record.g( mstart )[wday] + 1;
+    let start = mstart - @scheme.g( mstart )[wday] + 1;
 
     let jdn = start;
     let i = 0;
@@ -27,7 +27,7 @@ function month_cell( year, month ) {
         result += "<tr>" + nl;
         let j = 0;
         do while j < 7
-            let d = @record.g(jdn)[day];
+            let d = @scheme.g(jdn)[day];
             if d = 1
                 // Swap class between light and none.
                 class = @if( class = "", "light", "" );
@@ -168,18 +168,39 @@ td.light {color: darkgrey; background-color: snow;}
         result += "<tr>" + nl;
         let j = 0;
         do while j < 7
-            let d = @record(jdn)[day];
+            let d = @scheme(jdn)[day];
             if d = 1
                 // Swap class between light and bold.
                 class = @if( class = "bold", "light", "bold" );
             endif
-            result += "<td class='" + class + "'>" + d + "</td>" + nl;
+            result += "<td class='" + class + "'>" + d + @get_note(jdn, i) + "</td>" + nl;
             jdn += 1;
             j += 1;    
         loop
         result += "</tr>" + nl;
         i += 1;
     loop
+}
+
+// Landfill ⬛ collected every third week on Wednesday
+// Recycling ♻️ collected every second week on Wednesday
+// Garden rubbish 🟩 collected every second week on Friday
+function get_note( jdn, day ) {
+    result = "";
+    let dow = jdn mod 7 + 1;
+    let wn = jdn div 7;
+    if dow = 3
+        if wn mod 2 = 1
+            result += " ♻️";
+        endif
+        if wn mod 3 = 2
+            result += " ⬛";
+        endif
+    elseif dow = 5
+        if wn mod 2 = 0
+            result += " 🟩";
+        endif        
+    endif
 }
 
 file out;
@@ -191,8 +212,22 @@ command make_month_file( year, month, paper ) {
 
 // Main Script
 
-let y = @field( @read("Enter year: ") );
-let p = @read( "Enter paper size (a4,a3): " );
+let y = @field( args[1] );
+if y = ?
+    y = @field( @read("Enter year: ") );
+endif
+if y = ?
+    y = @scheme(today)[year];
+endif
+
+let p = args[2];
+if @size( p ) <> 2
+    p = @read( "Enter paper size (a4,a3): " );    
+endif
+if p <> "a3" and p <> "A3"
+    p = "A4";
+endif
+
 file out_year write "cal/cal-" + y + ".htm";
 write.out_year @html_year( y );
 let m = 1;
