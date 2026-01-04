@@ -11,10 +11,11 @@ function month_cell( year, month ) {
 
     let row = 0;
     result += "<tr>";
-    do until row = 7;
+    do {
+        until row = 7;
         row += 1;
         result += "<th>" + @element.w:a( row ) + "</th>";
-    loop
+    };
     result += "</tr>";
 
     let mstart = @date( {s:g year, month, 1} );
@@ -23,30 +24,32 @@ function month_cell( year, month ) {
     let jdn = start;
     let i = 0;
     let class = "light";
-    do while i < 6
+    do {
+        while i < 6;
         result += "<tr>" + nl;
         let j = 0;
-        do while j < 7
+        do {
+            while j < 7;
             let d = @scheme.g(jdn)[day];
-            if d = 1
+            if d = 1 {
                 // Swap class between light and none.
                 class = @if( class = "", "light", "" );
-            endif
+            };
             result += "<td" + @if(class = "light", " class='light'", "") + ">" + d;
             let note = "";
-            if j = 2 and class = ""
+            if j = 2 and class = "" {
                 let wn = jdn / 7;
-            endif
+            };
             result += "</td>" + nl;
             jdn += 1;
             j += 1;    
-        loop
+        };
         result += "</tr>" + nl;
         i += 1;
-    loop
+    };
 
     result += "</table>" + nl;
-}
+};
 
 function html_year( year ) {
 
@@ -105,21 +108,21 @@ td.light {color: darkgrey; background-color: snow;}
 <p class='small'>Created with <a href='https://github.com/nickmat/glich'>Glich</a> Script</p>
 </body>
 </html>";
-}
+};
 
 
 function html_month( year, month, paper ) {
 
     let mstart = @date( {s:g year, month, 1} );
-    let start = mstart - @record.g( mstart )[wday] + 1;
+    let start = mstart - @scheme.g( mstart )[wday] + 1;
 
     let mname = @element.m( month );
     let image = @element.:lp:03( month );
-    if paper = "a3" or paper = "A3"
+    if paper = "a3" or paper = "A3" {
         let cell_ht = "9";
-    else
+    } else {
         let cell_ht = "6";
-    endif
+    };
 
     result = "<!DOCTYPE html>
 <!-- Written by Glich (version " + @version.number + ") script wall-calendar.glcs -->
@@ -156,31 +159,34 @@ td.light {color: darkgrey; background-color: snow;}
 <tr>" + nl;
 
     let i = 1;
-    do while i < 8
+    do {
+        while i < 8;
         result += "<th>" + @element.w:a( i ) + "</th>";
         i += 1;
-    loop
+    };
     result += nl + "</tr>" + nl;
     let jdn = start;
     let i = 0;
     let class = "light";
-    do while i < 6
+    do {
+        while i < 6;
         result += "<tr>" + nl;
         let j = 0;
-        do while j < 7
+        do {
+            while j < 7;
             let d = @scheme(jdn)[day];
-            if d = 1
+            if d = 1 {
                 // Swap class between light and bold.
                 class = @if( class = "bold", "light", "bold" );
-            endif
+            };
             result += "<td class='" + class + "'>" + d + @get_note(jdn, i) + "</td>" + nl;
             jdn += 1;
             j += 1;    
-        loop
+        };
         result += "</tr>" + nl;
         i += 1;
-    loop
-}
+    };
+};
 
 // Landfill ⬛ collected every third week on Wednesday
 // Recycling ♻️ collected every second week on Wednesday
@@ -189,53 +195,53 @@ function get_note( jdn, day ) {
     result = "";
     let dow = jdn mod 7 + 1;
     let wn = jdn div 7;
-    if dow = 3
+    if dow = 3 {
         if wn mod 2 = 1
             result += " ♻️";
         endif
         if wn mod 3 = 2
             result += " ⬛";
         endif
-    elseif dow = 5
-        if wn mod 2 = 0
+    } elseif dow = 5 {
+        if wn mod 2 = 0 {
             result += " 🟩";
-        endif        
-    endif
-}
+        };
+    };
+};
 
 file out;
 
 command make_month_file( year, month, paper ) {
     file.out write "cal/cal-" + year + "-" + month + ".htm";
     write.out  @html_month( year, month, paper ) nl;
-}
+};
 
 // Main Script
 
 let y = @field( args[1] );
-if y = ?
+if y = ? {
     y = @field( @read("Enter year: ") );
-endif
-if y = ?
+};
+if y = ? {
     y = @scheme(today)[year];
-endif
+};
 
 let p = args[2];
-if @size( p ) <> 2
+if @size( p ) <> 2 {
     p = @read( "Enter paper size (a4,a3): " );    
-endif
-if p <> "a3" and p <> "A3"
+};
+if p <> "a3" and p <> "A3" {
     p = "A4";
-endif
+};
 
 file out_year write "cal/cal-" + y + ".htm";
 write.out_year @html_year( y );
 let m = 1;
-do
+do {
     call make_month_file( y, m, p );
     m += 1;
-    until m > 12
-loop
+    until m > 12;
+};
 
 write "Done" nl;
 end;
