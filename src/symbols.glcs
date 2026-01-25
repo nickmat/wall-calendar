@@ -1,0 +1,8 @@
+// Text used for particular days.
+
+// Bin collection days
+constant landfill = "⬛"; 
+constant recycling = "♻️";
+constant garden = "🟩";
+constant food = "🥗";
+

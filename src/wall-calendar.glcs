@@ -3,6 +3,7 @@
 mark test;
 
 module file:functions;
+module file:symbols;
 
 // write a full years calendar on a single page
 function month_cell( year, month ) {
@@ -190,23 +191,23 @@ td.light {color: darkgrey; background-color: snow;}
     };
 };
 
-// Landfill ⬛ collected every third week on Wednesday
-// Recycling ♻️ collected every second week on Wednesday
-// Garden rubbish 🟩 collected every second week on Friday
+// Landfill = landfill, collected every third week on Wednesday
+// Recycling = recycling, collected every second week on Wednesday
+// Garden rubbish = garden, collected every second week on Friday
 function get_note( jdn, day ) {
     result = "";
     let dow = jdn mod 7 + 1;
     let wn = jdn div 7;
     if dow = 3 {
         if wn mod 2 = 1
-            result += " ♻️";
+            result += " "+ recycling;
         endif
         if wn mod 3 = 2
-            result += " ⬛";
+            result += " " + landfill;
         endif
     } elseif dow = 5 {
         if wn mod 2 = 0 {
-            result += " 🟩";
+            result += " " + garden;
         };
     };
 };
