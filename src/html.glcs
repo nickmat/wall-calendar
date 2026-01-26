@@ -1,0 +1,238 @@
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+ * Name:        src/html.glcs
+ * Project:     Glich: Create HTML Wall Calendar.
+ * Purpose:     Create html calendar files.
+ * Author:      Nick Matthews
+ * Website:     https://github.com/nickmat/wall-calendar
+ * Created:     26th January 2026
+ * Copyright:   Copyright (c) 2026, Nick Matthews.
+ * Licence:     GNU GPLv3
+ *
+ *  WallCalendar is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  WallCalendar is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with WallCalendar.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+
+*/
+
+
+module file:functions;
+module file:symbols;
+
+// write a full years calendar on a single page
+function month_cell( year, month ) {
+
+    result = "<table class='month'>" + nl +
+        "<tr><th class='month' colspan='7'><a href='cal-"+year+"-"+month+".htm'>"
+        +@element.m( month )+"</a></th></tr>" + nl;
+
+    let row = 0;
+    result += "<tr>";
+    do {
+        until row = 7;
+        row += 1;
+        result += "<th>" + @element.w:a( row ) + "</th>";
+    };
+    result += "</tr>";
+
+    let mstart = @date( {s:g year, month, 1} );
+    let start = mstart - @scheme.g( mstart )[wday] + 1;
+
+    let jdn = start;
+    let i = 0;
+    let class = "light";
+    do {
+        while i < 6;
+        result += "<tr>" + nl;
+        let j = 0;
+        do {
+            while j < 7;
+            let d = @scheme.g(jdn)[day];
+            if d = 1 {
+                // Swap class between light and none.
+                class = @if( class = "", "light", "" );
+            };
+            result += "<td" + @if(class = "light", " class='light'", "") + ">" + d;
+            let note = "";
+            if j = 2 and class = "" {
+                let wn = jdn / 7;
+            };
+            result += "</td>" + nl;
+            jdn += 1;
+            j += 1;    
+        };
+        result += "</tr>" + nl;
+        i += 1;
+    };
+
+    result += "</table>" + nl;
+};
+
+function html_year( year ) {
+
+    result = "<!DOCTYPE html>
+<!-- Written by Glich (version " + @version.number + ") script wall-calendar.glcs -->
+<html lang='en'>
+<head>
+<meta charset='utf-8'>
+<title>Calendar</title>
+<style>
+table.layout {
+ table-layout: fixed;
+ width: 98%;
+ border-collapse: collapse;
+ margin: auto;
+}
+th.top {
+ font-size: 200%;
+}
+table.layout td {
+ width: 32%;
+ vertical-align: top;
+ text-align: center;
+}
+table.month {
+ width: 98%;
+ border: 1px solid black;
+ border-collapse: collapse;
+ margin: 0.25em auto;
+}
+table.month th.month {
+  font-weight: bold;
+  font-size: 125%;
+}
+table.month th {
+ border: none;
+ background-color: #fff5cc;
+ font-weight: normal;
+}
+table.month td {
+ width: 14%;
+ border: none;
+}
+td.light {color: darkgrey; background-color: snow;}
+.small { font-size: small;}
+</style>
+</head>
+<body>
+<table class='layout'>
+<tr><th class='top' colspan='3'>" + year + "</th></tr>
+<tr><td>"+@month_cell( year, 1 )+"</td><td>"+@month_cell( year, 2 )+"</td><td>"+@month_cell( year, 3 )+"</td></tr>
+<tr><td>"+@month_cell( year, 4 )+"</td><td class='month'>"+@month_cell( year, 5 )+"</td><td class='month'>"+@month_cell( year, 6 )+"</td></tr>
+<tr><td>"+@month_cell( year, 7 )+"</td><td class='month'>"+@month_cell( year, 8 )+"</td><td class='month'>"+@month_cell( year, 9 )+"</td></tr>
+<tr><td>"+@month_cell( year, 10 )+"</td><td class='month'>"+@month_cell( year, 11 )+"</td><td class='month'>"+@month_cell( year, 12 )+"</td></tr>
+</table>
+<p class='small'>Created with <a href='https://github.com/nickmat/glich'>Glich</a> Script</p>
+</body>
+</html>";
+};
+
+
+function html_month( year, month, paper ) {
+
+    let mstart = @date( {s:g year, month, 1} );
+    let start = mstart - @scheme.g( mstart )[wday] + 1;
+
+    let mname = @element.m( month );
+    let image = @element.:lp:03( month );
+    if paper = "a3" or paper = "A3" {
+        let cell_ht = "9";
+    } else {
+        let cell_ht = "6";
+    };
+
+    result = "<!DOCTYPE html>
+<!-- Written by Glich (version " + @version.number + ") script wall-calendar.glcs -->
+<html lang='en'>
+<head>
+<meta charset='utf-8'>
+<title>Calendar</title>
+<style>
+img {margin-left: 1%; margin-bottom: 1em;}
+table {
+ table-layout: fixed;
+ width: 98%;
+ margin-left: 1%;
+ border-collapse: collapse;
+}
+th {border: 1px solid black; background-color: #fff5cc;}
+th.top {font-size: 200%;}
+td {
+ width: 14%;
+ height: " + cell_ht + "em;
+ border: 1px solid black;
+ padding: 0 0.3em;
+ vertical-align: top;
+ font-size: 120%; font-weight: bold;
+}
+td.light {color: darkgrey; background-color: snow;}
+.small { font-size: small;}
+</style>
+</head>
+<body>
+<img src='image/" + image + ".jpg' alt='Image for " + mname + "' width='98%'>
+<table>
+<tr><th colspan='7' class='top'>" + @element.m( month ) + " " + year + "</th></tr>
+<tr>" + nl;
+
+    let i = 1;
+    do {
+        while i < 8;
+        result += "<th>" + @element.w:a( i ) + "</th>";
+        i += 1;
+    };
+    result += nl + "</tr>" + nl;
+    let jdn = start;
+    let i = 0;
+    let class = "light";
+    do {
+        while i < 6;
+        result += "<tr>" + nl;
+        let j = 0;
+        do {
+            while j < 7;
+            let d = @scheme(jdn)[day];
+            if d = 1 {
+                // Swap class between light and bold.
+                class = @if( class = "bold", "light", "bold" );
+            };
+            result += "<td class='" + class + "'>" + d + @get_note(jdn, i) + "</td>" + nl;
+            jdn += 1;
+            j += 1;    
+        };
+        result += "</tr>" + nl;
+        i += 1;
+    };
+};
+
+// Landfill = landfill, collected every third week on Wednesday
+// Recycling = recycling, collected every second week on Wednesday
+// Garden rubbish = garden, collected every second week on Friday
+function get_note( jdn, day ) {
+    result = "";
+    let dow = jdn mod 7 + 1;
+    let wn = jdn div 7;
+    if dow = 3 {
+        if wn mod 2 = 1
+            result += " "+ recycling;
+        endif
+        if wn mod 3 = 2
+            result += " " + landfill;
+        endif
+    } elseif dow = 5 {
+        if wn mod 2 = 0 {
+            result += " " + garden;
+        };
+    };
+};
+
