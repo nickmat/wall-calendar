@@ -182,7 +182,8 @@ td.light {color: darkgrey; background-color: snow;}
 <body>
 <img src='image/" + image + ".jpg' alt='Image for " + mname + "' width='98%'>
 <table>
-<tr><th colspan='7' class='top'>" + @element.m( month ) + " " + year + "</th></tr>
+<tr><th colspan='7' class='top'>" + @element.m( month ) 
+  + " <a href='cal-" + year + ".htm'>" + year + "</a></th></tr>
 <tr>" + nl;
 
     let i = 1;
