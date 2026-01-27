@@ -1,4 +1,29 @@
-mark  test_functions;
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+ * Name:        src/functions.glcs
+ * Project:     Glich: Create HTML Wall Calendar.
+ * Purpose:     Functions for selecting special days.
+ * Author:      Nick Matthews
+ * Website:     https://github.com/nickmat/wall-calendar
+ * Created:     13th January 2026
+ * Copyright:   Copyright (c) 2026, Nick Matthews.
+ * Licence:     GNU GPLv3
+ *
+ *  WallCalendar is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  WallCalendar is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with WallCalendar.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+
+*/
 
 function list_wdays.sig( range, dow ) {
     if @type(range) = "string" {
@@ -53,5 +78,48 @@ function english_holidays( year ) {
     } else {
         result |= xmas | xmas + 1;
     };
+};
+
+object entry { values date text; };
+
+function holidays( year ) {
+    result = {:};
+    // new year
+    let r = {s:g year, 1, 1};
+    let wd = r[wday];
+    let ny = @date(r);
+    if wd = 6 { // saturday
+        ny += 2;
+    } elseif wd = 7 {
+        ny += 1;
+    };
+    result[(@size(result))] = {entry ny, pub_hol + " New Year Holiday"};
+    
+    let e = @easter.gregorian( year );
+    result[(@size(result))] = {entry e-2, pub_hol + " Good Friday"};
+    result[(@size(result))] = {entry e+1, pub_hol + " Easter Monday"};
+
+    let list = @list_wdays( "may" + year, 1 );
+    result[(@size(result))] = {entry list[0], pub_hol + " Mayday Holiday"};
+    result[(@size(result))] = {entry list[(@size(list)-1)], pub_hol + " Spring Holiday"};
+    list = @list_wdays( "aug" + year, 1 );
+    result[(@size(result))] = {entry list[(@size(list)-1)], pub_hol + " Summer Holiday"};
+
+    let r = {s:g year, 12, 25};
+    let wd = r[wday];
+    let xmas = @date(r);
+    let xh = xmas;
+    let bd = xmas + 1;
+    if wd = 5 { // Friday
+        bd = xmas + 3;
+    } elseif wd = 6 { // Saturday
+        xh = xmas + 2;
+        bd = xmas + 3;
+    } elseif wd = 7 { // Sunday
+        xh = xmas + 1;
+        bd = xmas + 2;
+    };
+    result[(@size(result))] = {entry xh, pub_hol + " Christmas Holiday"};
+    result[(@size(result))] = {entry bd, pub_hol + " Boxing Day Holiday"};
 };
 

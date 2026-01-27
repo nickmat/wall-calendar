@@ -6,3 +6,6 @@ constant recycling = "♻️";
 constant garden = "🟩";
 constant food = "🥗";
 
+// Holidays
+constant pub_hol = " ❌";
+
