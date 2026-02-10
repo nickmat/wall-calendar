@@ -25,6 +25,8 @@
 
 */
 
+module file:symbols;
+
 function list_wdays.sig( range, dow ) {
     if @type(range) = "string" {
         range = @date.(sig)( range );
@@ -34,7 +36,7 @@ function list_wdays.sig( range, dow ) {
     };
     let beg = @low(range);
     let fin = @high(range);
-    let day = beg + (dow - @scheme(beg)[wday]) % 7;
+    let day = beg + (dow - @scheme(beg)[.wday]) % 7;
     result = empty;
     do {
         while day <= fin;
@@ -48,7 +50,7 @@ function english_holidays( year ) {
     result = empty;
 
     let ny = @date( "1jan" + y );
-    let nydow = @scheme( ny )[wday];
+    let nydow = @scheme( ny )[.wday];
     if nydow = 6 { // saturday
         result |= ny + 2;
     } elseif nydow = 7 {
@@ -63,12 +65,12 @@ function english_holidays( year ) {
 
     let list = @list_wdays( "may" + y, 1 );
     result |= list[0];
-    result |= list[(@size(list)-1)];
+    result |= list[@size(list)-1];
     list = @list_wdays("aug"+y, 1);
-    result |= list[(@size(list)-1)];
+    result |= list[@size(list)-1];
     
     let xmas = @date("25dec"+y);
-    let xdow = @scheme( xmas )[wday];
+    let xdow = @scheme( xmas )[.wday];
     if xdow = 5 { // Friday
         result |= xmas | xmas + 3;
     } elseif xdow = 6 {
@@ -86,28 +88,27 @@ function holidays( year ) {
     result = {:};
     // new year
     let r = {s:g year, 1, 1};
-    let wd = r[wday];
+    let wd = r[.wday];
     let ny = @date(r);
     if wd = 6 { // saturday
         ny += 2;
     } elseif wd = 7 {
         ny += 1;
     };
-    result[(@size(result))] = {entry ny, pub_hol + " New Year Holiday"};
-    
+    result[@size(result)] = {entry ny, pub_hol + " New Year Holiday"};
     let e = @easter.gregorian( year );
-    result[(@size(result))] = {entry e-2, pub_hol + " Good Friday"};
-    result[(@size(result))] = {entry e+1, pub_hol + " Easter Monday"};
+    result[@size(result)] = {entry e-2, pub_hol + " Good Friday"};
+    result[@size(result)] = {entry e+1, pub_hol + " Easter Monday"};
 
     let list = @list_wdays( "may" + year, 1 );
-    result[(@size(result))] = {entry list[0], pub_hol + " Mayday Holiday"};
-    result[(@size(result))] = {entry list[(@size(list)-1)], pub_hol + " Spring Holiday"};
+    result[@size(result)] = {entry list[0], pub_hol + " Mayday Holiday"};
+    result[@size(result)] = {entry list[(@size(list)-1)], pub_hol + " Spring Holiday"};
     list = @list_wdays( "aug" + year, 1 );
-    result[(@size(result))] = {entry list[(@size(list)-1)], pub_hol + " Summer Holiday"};
+    result[@size(result)] = {entry list[(@size(list)-1)], pub_hol + " Summer Holiday"};
 
-    let r = {s:g year, 12, 25};
-    let wd = r[wday];
-    let xmas = @date(r);
+    let xmas = @date({s:g year, 12, 25});
+    let wd = @scheme(xmas)[.wday];
+
     let xh = xmas;
     let bd = xmas + 1;
     if wd = 5 { // Friday
@@ -119,7 +120,7 @@ function holidays( year ) {
         xh = xmas + 1;
         bd = xmas + 2;
     };
-    result[(@size(result))] = {entry xh, pub_hol + " Christmas Holiday"};
-    result[(@size(result))] = {entry bd, pub_hol + " Boxing Day Holiday"};
+    result[@size(result)] = {entry xh, pub_hol + " Christmas Holiday"};
+    result[@size(result)] = {entry bd, pub_hol + " Boxing Day Holiday"};
 };
 

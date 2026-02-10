@@ -27,11 +27,9 @@
 
 
 module file:functions;
-module file:symbols;
 
 // write a full years calendar on a single page
 function month_cell( year, month ) {
-
     result = "<table class='month'>" + nl +
         "<tr><th class='month' colspan='7'><a href='cal-"+year+"-"+month+".htm'>"
         +@element.m( month )+"</a></th></tr>" + nl;
@@ -46,7 +44,7 @@ function month_cell( year, month ) {
     result += "</tr>";
 
     let mstart = @date( {s:g year, month, 1} );
-    let start = mstart - @scheme.g( mstart )[wday] + 1;
+    let start = mstart - @scheme.g( mstart )[.wday] + 1;
 
     let jdn = start;
     let i = 0;
@@ -57,7 +55,7 @@ function month_cell( year, month ) {
         let j = 0;
         do {
             while j < 7;
-            let d = @scheme.g(jdn)[day];
+            let d = @scheme.g(jdn)[.day];
             if d = 1 {
                 // Swap class between light and none.
                 class = @if( class = "", "light", "" );
@@ -141,7 +139,7 @@ td.light {color: darkgrey; background-color: snow;}
 function html_month( year, month, paper ) {
 
     let mstart = @date( {s:g year, month, 1} );
-    let start = mstart - @scheme.g( mstart )[wday] + 1;
+    let start = mstart - @scheme.g( mstart )[.wday] + 1;
 
     let mname = @element.m( month );
     let image = @element.:lp:03( month );
@@ -202,7 +200,7 @@ td.light {color: darkgrey; background-color: snow;}
         let j = 0;
         do {
             while j < 7;
-            let d = @scheme(jdn)[day];
+            let d = @scheme(jdn)[.day];
             if d = 1 {
                 // Swap class between light and bold.
                 class = @if( class = "bold", "light", "bold" );

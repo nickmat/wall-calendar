@@ -32,7 +32,6 @@ mark test;
 
 module file:html;
 
-
 file out;
 
 command make_month_file( year, month, paper ) {
@@ -42,21 +41,23 @@ command make_month_file( year, month, paper ) {
 
 // Main Script
 
-let y = @field( args[1] );
+let y = 2026; // @field( args[1] );
 if y = ? {
     y = @field( @read("Enter year: ") );
 };
 if y = ? {
-    y = @scheme(today)[year];
+    y = @scheme(today)[.year];
 };
 
-let p = args[2];
+let p = "A4"; // args[2];
 if @size( p ) <> 2 {
     p = @read( "Enter paper size (a4,a3): " );    
 };
 if p <> "a3" and p <> "A3" {
     p = "A4";
 };
+
+write "year = "+y, "paper = "+p nl;
 
 file out_year write "cal/cal-" + y + ".htm";
 write.out_year @html_year( y );
@@ -70,7 +71,7 @@ do {
 write "Done" nl;
 
 
-let list = @english_holidays( y );
-write @text.g:wdmy( list ) nl;
+//let list = @english_holidays( y );
+//write @text.g:wdmy( list ) nl;
 
 end;
